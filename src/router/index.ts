@@ -1,7 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import Informacoes from '@/components/informacoes.vue'
-import Golpes from '@/components/golpes.vue'
-import PokeDexView from '@/views/pokeDexView.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import Informacoes from '@/components/informacoes.vue';
+import Golpes from '@/components/golpes.vue';
+import PokeDexView from '@/views/pokeDexView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,6 +22,6 @@ const router = createRouter({
       component: Golpes,
     },
   ],
-})
+});
 
-export default router
+export default router;

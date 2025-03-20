@@ -1,42 +1,61 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-import { getSearchPokemon } from '../services/api.ts'
-import type { TiposDados } from '../services/types.ts'
-import Informacoes from './informacoes.vue'
-import Golpes from './golpes.vue'
+import { reactive, ref } from 'vue';
+import { getSearchPokemon } from '../services/api.ts';
+import type { TiposDados } from '../services/types.ts';
+import Informacoes from './informacoes.vue';
+import Golpes from './golpes.vue';
 
-const input = ref()
-const activeComponent = ref('')
+const input = ref();
+const activeComponent = ref('');
 
 const data = reactive<TiposDados>({
   nome: '',
   numero: '',
   elemento: '',
   pokemonImg: '',
-})
+  especie: '',
+  peso: undefined,
+  vida: undefined,
+  ataque: undefined,
+  defesa: undefined,
+  ataqueSpecial: undefined,
+  defesaSpecial: undefined,
+  velocida: undefined,
+  habilidade: [],
+});
 
 const showSearchPokemon = async (pokemon: string) => {
-  console.log(pokemon)
-  const pokeInfo = await getSearchPokemon(pokemon)
-  console.log(pokeInfo)
+  console.log(pokemon);
+  const pokeInfo = await getSearchPokemon(pokemon);
+  console.log(pokeInfo);
 
-  data.nome = pokeInfo.name
-  data.numero = pokeInfo.id
-  data.pokemonImg = pokeInfo.sprites.front_default
+  data.nome = pokeInfo.name;
+  data.numero = pokeInfo.id;
+  data.pokemonImg = pokeInfo.sprites.front_default;
+  data.especie = pokeInfo.species.name;
+  data.peso = pokeInfo.weight / 10;
+  data.vida = pokeInfo.stats[0].base_stat;
+  data.ataque = pokeInfo.stats[1].base_stat;
+  data.defesa = pokeInfo.stats[2].base_stat;
+  data.ataqueSpecial = pokeInfo.stats[3].base_stat;
+  data.defesaSpecial = pokeInfo.stats[4].base_stat;
+  data.velocida = pokeInfo.stats[5].base_stat;
+  data.habilidade = pokeInfo.moves.map((move: any) => move.move.name);
+
   if (pokeInfo.types.length > 1) {
-    data.elemento = pokeInfo.types[0].type.name + ' ' + pokeInfo.types[1].type.name
+    data.elemento = pokeInfo.types[0].type.name + ' ' + pokeInfo.types[1].type.name;
   } else {
-    data.elemento = pokeInfo.types[0].type.name
+    data.elemento = pokeInfo.types[0].type.name;
   }
-}
+};
 
 function searchBtn() {
-  const pokemonName = input.value.trim()
-  showSearchPokemon(pokemonName)
+  const pokemonName = input.value.trim();
+  showSearchPokemon(pokemonName);
 }
 
 function setActiveComponent(component: string) {
-  activeComponent.value = component
+  activeComponent.value = component;
 }
 </script>
 
@@ -61,12 +80,13 @@ function setActiveComponent(component: string) {
         </div>
         <div class="pokedex-infos">
           <a href="" @click.prevent="setActiveComponent('info')">Informações</a>
-          <RouterLink to="/habili">Habilidade</RouterLink>
-          <RouterLink to="/habili">Status</RouterLink>
-          <RouterLink to="/habili">Efetividade</RouterLink>
+          <a href="" @click.prevent="setActiveComponent('habilidade')">Habilidades</a>
         </div>
         <div v-if="activeComponent === 'info'">
-          <Informacoes />
+          <Informacoes :data="data" />
+        </div>
+        <div v-if="activeComponent === 'habilidade'">
+          <Golpes :data="data" />
         </div>
       </div>
       <div class="search-pokedex">
@@ -118,7 +138,6 @@ function setActiveComponent(component: string) {
 .pokedex-infos {
   display: flex;
   justify-content: space-between;
-  gap: 50px;
 }
 .pokedex-infos a {
   text-decoration: none;
