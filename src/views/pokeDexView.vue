@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+import PokeDex from '../components/pokeDex.vue'
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <PokeDex />
   </main>
 </template>
