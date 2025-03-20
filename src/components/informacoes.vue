@@ -24,7 +24,7 @@ type Props = {
     </p>
     <p>
       Atk.Especial:<progress :value="data.ataqueSpecial" max="500" class="status-bar"></progress>
-      {{ data.ataqueSpecial }}
+      {{ data.ataqueSpecial }};
     </p>
     <p>
       Def.Especial:<progress :value="data.defesaSpecial" max="500" class="status-bar"></progress>
