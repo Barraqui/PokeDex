@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
-import { getSearchPokemon } from '../services/api.ts';
+import { onMounted, reactive, ref, watch } from 'vue';
+import { getSearchPokemon, getAllPokemon } from '../services/api.ts';
 import type { TiposDados } from '../services/types.ts';
 import Informacoes from './informacoes.vue';
 import Golpes from './golpes.vue';
@@ -22,6 +22,9 @@ const data = reactive<TiposDados>({
   defesaSpecial: undefined,
   velocida: undefined,
   habilidade: [],
+  urlPokemons: 'https://pokeapi.co/api/v2/pokemon?limit=1025',
+  pokemons: [],
+  filterInput: [],
 });
 
 const showSearchPokemon = async (pokemon: string) => {
@@ -48,6 +51,27 @@ const showSearchPokemon = async (pokemon: string) => {
     data.elemento = pokeInfo.types[0].type.name;
   }
 };
+
+const fetchPokemons = async () => {
+  const response = await fetch(data.urlPokemons);
+  const json = await response.json();
+  data.pokemons = json.results;
+  data.filterInput = data.pokemons;
+};
+fetchPokemons();
+
+const filterPokemon = () => {
+  const query = input.value.toLowerCase().trim();
+
+  if (!query) {
+    data.filterInput = data.pokemons;
+  } else {
+    data.filterInput = data.pokemons?.filter((pokemon) =>
+      pokemon.name.toLowerCase().includes(query),
+    );
+  }
+};
+watch(input, filterPokemon);
 
 function searchBtn() {
   const pokemonName = input.value.trim();
@@ -90,7 +114,17 @@ function setActiveComponent(component: string) {
         </div>
       </div>
       <div class="search-pokedex">
-        <input type="text" placeholder="Buscar Pokemon" v-model="input" />
+        <div class="scroll">
+          <div
+            class="poke-list-container"
+            v-for="(pokemon, index) in data.filterInput"
+            :key="pokemon.name"
+          >
+            <!-- pokemon?limit=10000 -->
+            <p>{{ index + 1 }}. {{ pokemon.name }}</p>
+          </div>
+        </div>
+        <input type="text" placeholder="Buscar Pokemon" v-model="input" @input="filterPokemon" />
         <button @click="searchBtn">testando</button>
       </div>
     </div>
@@ -124,7 +158,7 @@ function setActiveComponent(component: string) {
 }
 .search-pokedex {
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
   width: 50%;
   height: 95%;
   border: 1px solid black;
@@ -142,5 +176,24 @@ function setActiveComponent(component: string) {
 .pokedex-infos a {
   text-decoration: none;
   color: black;
+}
+.scroll {
+  overflow-y: auto;
+  border: 1px solid black;
+  font-size: 15px;
+}
+
+.poke-list-container {
+  background-color: rgb(1, 71, 71);
+  padding: 3px;
+}
+
+.scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+  background-color: rgb(0, 0, 0);
+  border-radius: 10px;
 }
 </style>

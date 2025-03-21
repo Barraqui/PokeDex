@@ -6,7 +6,7 @@ type Props = {
   data: TiposDados;
 };
 </script>
-
+<!-- puxar os pokes com nome e id, fazer um sistema de busca quando coloca 1 letra e aparece por filtro, select do valor clickado -->
 <template>
   <div class="poke-info">
     <p>Espécie: {{ data.especie }}</p>
@@ -24,7 +24,7 @@ type Props = {
     </p>
     <p>
       Atk.Especial:<progress :value="data.ataqueSpecial" max="500" class="status-bar"></progress>
-      {{ data.ataqueSpecial }};
+      {{ data.ataqueSpecial }}
     </p>
     <p>
       Def.Especial:<progress :value="data.defesaSpecial" max="500" class="status-bar"></progress>
