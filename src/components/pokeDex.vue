@@ -50,6 +50,7 @@ const showSearchPokemon = async (pokemon: string) => {
     data.elemento = pokeInfo.types[0].type.name;
   }
 };
+showSearchPokemon('bulbasaur');
 
 const fetchPokemons = async () => {
   const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1025');
@@ -94,21 +95,26 @@ function setActiveComponent(component: string) {
   <div class="main-container">
     <div class="pokedex-main-container">
       <div class="pokedex-container">
-        <div class="screen-pokedex">
-          <div class="info-top">
-            <div class="info-name-number">
-              <div class="name-pokedex">{{ data.nome }}</div>
-              <div class="number-pokedex">{{ data.numero }}</div>
+        <div class="screen-container">
+          <div class="screen-pokedex">
+            <div class="info-top">
+              <div class="info-name-number">
+                <div class="name-pokedex">{{ data.nome }}</div>
+                <div class="number-pokedex">
+                  <p>N&deg;</p>
+                  <p>{{ data.numero }}</p>
+                </div>
+              </div>
+              <div class="element-pokedex">{{ data.elemento }}</div>
             </div>
-            <div class="element-pokedex">{{ data.elemento }}</div>
-          </div>
-          <div class="pokedex-imagem">
-            <img
-              class="img-pokemon"
-              v-if="data.pokemonImg"
-              :src="data.pokemonImg"
-              :alt="data.pokemonImg"
-            />
+            <div class="pokedex-imagem">
+              <img
+                class="img-pokemon"
+                v-if="data.pokemonImg"
+                :src="data.pokemonImg"
+                :alt="data.pokemonImg"
+              />
+            </div>
           </div>
         </div>
         <div class="pokedex-infos">
@@ -122,19 +128,27 @@ function setActiveComponent(component: string) {
           <Golpes :data="data" />
         </div>
       </div>
-      <div class="search-pokedex">
-        <div class="scroll">
-          <div
-            class="poke-list-container"
-            v-for="pokemon in data.filterInput"
-            :key="pokemon.name"
-            @click="showSearchPokemon(pokemon.name)"
-          >
-            <p>{{ pokemon.id }}. {{ pokemon.name }}</p>
+      <div class="search-pokedex-container">
+        <div class="search-pokedex">
+          <div class="scroll">
+            <div
+              class="poke-list-container"
+              v-for="pokemon in data.filterInput"
+              :key="pokemon.name"
+              @click="showSearchPokemon(pokemon.name)"
+            >
+              <p>{{ pokemon.id }}. {{ pokemon.name }}</p>
+            </div>
+          </div>
+          <div class="input-container">
+            <input
+              type="text"
+              placeholder="Buscar Pokemon"
+              v-model="input"
+              @input="filterPokemon"
+            />
           </div>
         </div>
-        <input type="text" placeholder="Buscar Pokemon" v-model="input" @input="filterPokemon" />
-        <button @click="searchBtn">testando</button>
       </div>
     </div>
   </div>
@@ -146,15 +160,15 @@ function setActiveComponent(component: string) {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: rgb(54, 54, 54);
+  background-color: rgb(59, 59, 59);
 }
+/* squawkabilly-green-plumage */
 .pokedex-main-container {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 500px;
   width: 1000px;
-  border: 1px solid black;
 }
 
 .pokedex-container {
@@ -163,21 +177,54 @@ function setActiveComponent(component: string) {
   flex-direction: column;
   width: 50%;
   height: 95%;
-  border: 1px solid black;
+  border: 1px solid rgb(0, 0, 0);
+  box-shadow: 1px 0px 3px rgb(0, 0, 0);
+  background-color: #803b3c;
+  border-radius: 10px;
 }
-.search-pokedex {
+
+.search-pokedex-container {
   display: flex;
   flex-direction: column;
   width: 50%;
   height: 95%;
+}
+.search-pokedex {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: #962026;
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 10px;
+}
+
+.input-container {
+  display: flex;
+  align-items: flex-end;
+  height: 500px;
+  width: 496px;
+}
+
+.input-container input {
+  width: 100%;
+  height: 40px;
+  border-radius: 10px;
+}
+.screen-container {
+  width: 95%;
+  height: 40%;
+  margin-top: 2%;
+  border-radius: 10px;
   border: 1px solid black;
+  box-shadow: 1px 0px 3px rgb(0, 0, 0);
+  background-color: rgb(190, 179, 179);
 }
 
 .screen-pokedex {
-  margin: 2%;
-  height: 40%;
+  min-height: 200px;
   width: 100%;
-  border: 1px solid black;
   font-size: 16px;
 }
 
@@ -192,7 +239,9 @@ function setActiveComponent(component: string) {
   flex-direction: column;
   gap: 10px;
 }
-
+.number-pokedex {
+  display: flex;
+}
 .element-pokedex {
   display: flex;
   align-items: center;
@@ -211,7 +260,10 @@ function setActiveComponent(component: string) {
 }
 .pokedex-infos {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  width: 100%;
+  margin-top: 10px;
+  padding: 5px;
 }
 
 .pokedex-infos a {
@@ -221,13 +273,14 @@ function setActiveComponent(component: string) {
 
 .scroll {
   overflow-y: auto;
-  border: 1px solid black;
-  font-size: 15px;
+  min-height: 80%;
+  font-size: 14px;
   cursor: pointer;
+  padding: 5px;
 }
 
 .poke-list-container {
-  background-color: rgb(1, 71, 71);
+  font-size: 14px;
   padding: 3px;
 }
 
@@ -235,7 +288,7 @@ function setActiveComponent(component: string) {
   background-color: rgb(255, 0, 0);
 }
 .scroll::-webkit-scrollbar {
-  width: 8px;
+  width: 5px;
 }
 
 .scroll::-webkit-scrollbar-thumb {
