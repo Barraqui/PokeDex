@@ -22,15 +22,14 @@ const data = reactive<TiposDados>({
   defesaSpecial: undefined,
   velocida: undefined,
   habilidade: [],
-  urlPokemons: 'https://pokeapi.co/api/v2/pokemon?limit=1025',
+  urlPokemonsLimit: 'https://pokeapi.co/api/v2/pokemon?limit=1025',
   pokemons: [],
   filterInput: [],
+  pokemonID: 0,
 });
 
 const showSearchPokemon = async (pokemon: string) => {
-  console.log(pokemon);
   const pokeInfo = await getSearchPokemon(pokemon);
-  console.log(pokeInfo);
 
   data.nome = pokeInfo.name;
   data.numero = pokeInfo.id;
@@ -53,10 +52,18 @@ const showSearchPokemon = async (pokemon: string) => {
 };
 
 const fetchPokemons = async () => {
-  const response = await fetch(data.urlPokemons);
-  const json = await response.json();
-  data.pokemons = json.results;
+  const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1025');
+  const jsonResponse = await response.json();
+  data.pokemons = jsonResponse.results;
   data.filterInput = data.pokemons;
+
+  if (data.pokemons !== undefined) {
+    for (const [index, pokemon] of data.pokemons.entries()) {
+      const pokeDetalhes = await fetch(pokemon.url);
+      const pokeJson = await pokeDetalhes.json();
+      pokemon.id = pokeJson.id;
+    }
+  }
 };
 fetchPokemons();
 
@@ -88,12 +95,14 @@ function setActiveComponent(component: string) {
     <div class="pokedex-main-container">
       <div class="pokedex-container">
         <div class="screen-pokedex">
-          <div class="info-name-number">
-            <div class="name-pokedex">{{ data.nome }}</div>
-            <div class="number-pokedex">{{ data.numero }}</div>
+          <div class="info-top">
+            <div class="info-name-number">
+              <div class="name-pokedex">{{ data.nome }}</div>
+              <div class="number-pokedex">{{ data.numero }}</div>
+            </div>
+            <div class="element-pokedex">{{ data.elemento }}</div>
           </div>
-          <div class="element-pokedex">{{ data.elemento }}</div>
-          <div class="pokedex-imagen">
+          <div class="pokedex-imagem">
             <img
               class="img-pokemon"
               v-if="data.pokemonImg"
@@ -117,11 +126,11 @@ function setActiveComponent(component: string) {
         <div class="scroll">
           <div
             class="poke-list-container"
-            v-for="(pokemon, index) in data.filterInput"
+            v-for="pokemon in data.filterInput"
             :key="pokemon.name"
+            @click="showSearchPokemon(pokemon.name)"
           >
-            <!-- pokemon?limit=10000 -->
-            <p>{{ index + 1 }}. {{ pokemon.name }}</p>
+            <p>{{ pokemon.id }}. {{ pokemon.name }}</p>
           </div>
         </div>
         <input type="text" placeholder="Buscar Pokemon" v-model="input" @input="filterPokemon" />
@@ -144,7 +153,7 @@ function setActiveComponent(component: string) {
   align-items: center;
   justify-content: center;
   height: 500px;
-  width: 700px;
+  width: 1000px;
   border: 1px solid black;
 }
 
@@ -152,7 +161,7 @@ function setActiveComponent(component: string) {
   display: flex;
   align-items: center;
   flex-direction: column;
-  width: 95%;
+  width: 50%;
   height: 95%;
   border: 1px solid black;
 }
@@ -163,24 +172,58 @@ function setActiveComponent(component: string) {
   height: 95%;
   border: 1px solid black;
 }
+
 .screen-pokedex {
   margin: 2%;
   height: 40%;
   width: 100%;
   border: 1px solid black;
+  font-size: 16px;
+}
+
+.info-top {
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.info-name-number {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.element-pokedex {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  max-width: 140px;
+}
+.pokedex-imagem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pokedex-imagem img {
+  width: 120px;
+  height: 120px;
 }
 .pokedex-infos {
   display: flex;
   justify-content: space-between;
 }
+
 .pokedex-infos a {
   text-decoration: none;
   color: black;
 }
+
 .scroll {
   overflow-y: auto;
   border: 1px solid black;
   font-size: 15px;
+  cursor: pointer;
 }
 
 .poke-list-container {
@@ -188,6 +231,9 @@ function setActiveComponent(component: string) {
   padding: 3px;
 }
 
+.scroll :hover {
+  background-color: rgb(255, 0, 0);
+}
 .scroll::-webkit-scrollbar {
   width: 8px;
 }

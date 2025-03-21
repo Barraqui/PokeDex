@@ -12,7 +12,8 @@ export interface TiposDados {
   defesaSpecial?: number;
   velocida?: number;
   habilidade?: string[];
-  urlPokemons?: string;
+  urlPokemonsLimit?: string;
   pokemons?: string[];
   filterInput?: string[];
+  pokemonID?: number;
 }
