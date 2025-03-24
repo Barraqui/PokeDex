@@ -18,12 +18,12 @@ type Props = {
 </template>
 <style scoped>
 .golpes-pokemon-container {
-  background-color: rgb(126, 67, 67);
   height: 20vh;
   overflow-y: auto;
   padding: 10px;
   padding-right: 250px;
   margin-top: 10px;
+  color: var(--Color);
 }
 .golpes-pokemon-container::-webkit-scrollbar {
   width: 8px;

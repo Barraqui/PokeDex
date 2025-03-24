@@ -65,6 +65,7 @@ type Props = {
   gap: 10px;
   width: 450px;
   height: 30vh;
+  color: var(--Color);
   /* background-color: rgb(71, 88, 88); */
 }
 .poke-info-menu {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref, watch } from 'vue';
-import { getSearchPokemon, getAllPokemon } from '../services/api.ts';
+import { reactive, ref, watch } from 'vue';
+import { getSearchPokemon } from '../services/api.ts';
 import type { TiposDados } from '../services/types.ts';
 import Informacoes from './informacoes.vue';
 import Golpes from './golpes.vue';
@@ -53,7 +53,7 @@ const showSearchPokemon = async (pokemon: string) => {
 showSearchPokemon('bulbasaur');
 
 const fetchPokemons = async () => {
-  const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1025');
+  const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1025&offset=0');
   const jsonResponse = await response.json();
   data.pokemons = jsonResponse.results;
   data.filterInput = data.pokemons;
@@ -61,8 +61,16 @@ const fetchPokemons = async () => {
   if (data.pokemons !== undefined) {
     for (const [index, pokemon] of data.pokemons.entries()) {
       const pokeDetalhes = await fetch(pokemon.url);
+
+      //A api começou a dar erro 403 apenas no id do pokemon 968, então essa verificação é para esse erro e alguns outros futuros.
+      if (!pokeDetalhes.ok) {
+        console.error(`Erro ao buscar detalhes do pokémon ${pokemon.name}`);
+        continue;
+      }
+
       const pokeJson = await pokeDetalhes.json();
       pokemon.id = pokeJson.id;
+      console.log(pokemon.id);
     }
   }
 };
@@ -81,14 +89,10 @@ const filterPokemon = () => {
 };
 watch(input, filterPokemon);
 
-function searchBtn() {
-  const pokemonName = input.value.trim();
-  showSearchPokemon(pokemonName);
-}
-
 function setActiveComponent(component: string) {
   activeComponent.value = component;
 }
+setActiveComponent('info');
 </script>
 
 <template>
@@ -160,7 +164,7 @@ function setActiveComponent(component: string) {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: rgb(59, 59, 59);
+  background-color: rgb(85, 85, 85);
 }
 /* squawkabilly-green-plumage */
 .pokedex-main-container {
@@ -179,7 +183,7 @@ function setActiveComponent(component: string) {
   height: 95%;
   border: 1px solid rgb(0, 0, 0);
   box-shadow: 1px 0px 3px rgb(0, 0, 0);
-  background-color: #803b3c;
+  background-color: #1b1b1b67;
   border-radius: 10px;
 }
 
@@ -204,7 +208,7 @@ function setActiveComponent(component: string) {
   display: flex;
   align-items: flex-end;
   height: 500px;
-  width: 496px;
+  width: 100%;
 }
 
 .input-container input {
@@ -268,7 +272,7 @@ function setActiveComponent(component: string) {
 
 .pokedex-infos a {
   text-decoration: none;
-  color: black;
+  color: var(--Color);
 }
 
 .scroll {
@@ -281,7 +285,7 @@ function setActiveComponent(component: string) {
 
 .poke-list-container {
   font-size: 14px;
-  padding: 3px;
+  padding: 8px;
 }
 
 .scroll :hover {

@@ -1,3 +1,7 @@
+:root {
+  --Color: #d6d6d6;
+}
+
 * {
   padding: 0px;
   margin: 0px;
