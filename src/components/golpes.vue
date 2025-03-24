@@ -11,7 +11,7 @@ type Props = {
   <div class="golpes-pokemon-container">
     <div class="golpes-pokemon" v-for="(habilidade, index) in data.habilidade" :key="index">
       <div class="golpes">
-        <span>{{ habilidade }}</span>
+        <li>{{ habilidade }}</li>
       </div>
     </div>
   </div>
@@ -23,6 +23,7 @@ type Props = {
   padding: 10px;
   padding-right: 250px;
   margin-top: 10px;
+  width: 200px;
   color: var(--Color);
 }
 .golpes-pokemon-container::-webkit-scrollbar {
@@ -34,9 +35,9 @@ type Props = {
   border-radius: 10px;
 }
 .golpes-pokemon {
-  padding: 4px;
+  padding: 8px;
 }
 .golpes {
-  width: 100%;
+  width: 300px;
 }
 </style>

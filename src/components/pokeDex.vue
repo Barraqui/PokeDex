@@ -164,15 +164,16 @@ setActiveComponent('info');
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: rgb(85, 85, 85);
+  background-color: rgb(78, 78, 78);
 }
-/* squawkabilly-green-plumage */
+
 .pokedex-main-container {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 500px;
   width: 1000px;
+  cursor: pointer;
 }
 
 .pokedex-container {
@@ -183,7 +184,7 @@ setActiveComponent('info');
   height: 95%;
   border: 1px solid rgb(0, 0, 0);
   box-shadow: 1px 0px 3px rgb(0, 0, 0);
-  background-color: #1b1b1b67;
+  background-color: var(--BackgroundPokeDex);
   border-radius: 10px;
 }
 
@@ -199,9 +200,10 @@ setActiveComponent('info');
   justify-content: center;
   width: 100%;
   height: 100%;
-  background-color: #962026;
   border: 1px solid rgb(0, 0, 0);
   border-radius: 10px;
+  background-color: var(--BackgroundPokeDex);
+  color: var(--Color);
 }
 
 .input-container {
@@ -215,6 +217,7 @@ setActiveComponent('info');
   width: 100%;
   height: 40px;
   border-radius: 10px;
+  padding: 5px;
 }
 .screen-container {
   width: 95%;
@@ -223,7 +226,7 @@ setActiveComponent('info');
   border-radius: 10px;
   border: 1px solid black;
   box-shadow: 1px 0px 3px rgb(0, 0, 0);
-  background-color: rgb(190, 179, 179);
+  background-color: rgb(202, 202, 202);
 }
 
 .screen-pokedex {
@@ -274,7 +277,9 @@ setActiveComponent('info');
   text-decoration: none;
   color: var(--Color);
 }
-
+.pokedex-infos :hover {
+  color: #000000;
+}
 .scroll {
   overflow-y: auto;
   min-height: 80%;
@@ -289,7 +294,7 @@ setActiveComponent('info');
 }
 
 .scroll :hover {
-  background-color: rgb(255, 0, 0);
+  background-color: #1f1e1e;
 }
 .scroll::-webkit-scrollbar {
   width: 5px;
@@ -298,5 +303,6 @@ setActiveComponent('info');
 .scroll::-webkit-scrollbar-thumb {
   background-color: rgb(0, 0, 0);
   border-radius: 10px;
+  height: 30px;
 }
 </style>
