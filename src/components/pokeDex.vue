@@ -82,7 +82,7 @@ const filterPokemon = () => {
   if (!query) {
     data.filterInput = data.pokemons;
   } else {
-    data.filterInput = data.pokemons?.filter((pokemon) =>
+    data.filterInput = data.pokemons?.filter((pokemon: { name: string }) =>
       pokemon.name.toLowerCase().includes(query),
     );
   }

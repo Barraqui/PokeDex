@@ -13,7 +13,7 @@ export interface TiposDados {
   velocida?: number;
   habilidade?: string[];
   urlPokemonsLimit?: string;
-  pokemons?: string[];
-  filterInput?: string[];
+  pokemons?: any;
+  filterInput?: any;
   pokemonID?: number;
 }
